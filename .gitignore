@@ -16,15 +16,19 @@ env/
 .env.local
 .env.*.local
 backend/.env
+frontend/.env.development
 frontend/.env.production
 
 # Database
 *.db
 *.sqlite3
+resume_assistant.db
 
 # Node
 node_modules/
 frontend/node_modules/
+dist/
+build/
 frontend/dist/
 
 # IDE
@@ -38,3 +42,6 @@ frontend/dist/
 # Local AI tooling
 .superpowers/
 .codex/
+
+# Local temp files
+start-test.txt
