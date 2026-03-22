@@ -30,7 +30,7 @@ Full authenticated workspace with the source editor, result panels, and history 
 - Registers users and authenticates them with JWT-based login.
 - Lets authenticated users submit `resume_text`, `jd_text`, and a selected optimization style.
 - Returns three structured result blocks: optimized resume, match analysis, and suggestions.
-- Supports three rewrite modes: `Professional`, `Concise`, and `Achievement-Oriented`.
+- Supports three rewrite modes: Professional, Concise, and Achievement-Oriented.
 - Stores optimization history per user in SQLite.
 - Lets users search history, filter by style, reopen a saved run, and delete records.
 - Supports copy-to-clipboard plus Markdown and PDF export from the frontend.
