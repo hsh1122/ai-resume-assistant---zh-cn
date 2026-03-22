@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.venv/
+.venv*/
+venv/
+venv*/
+env/
+
+# Environment
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env.production
+
+# Database
+*.db
+*.sqlite3
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+
+# Local AI tooling
+.superpowers/
+.codex/

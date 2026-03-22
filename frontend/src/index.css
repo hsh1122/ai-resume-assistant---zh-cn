@@ -1,0 +1,266 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Manrope", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color-scheme: light;
+  --ops-bg: #f3f5f7;
+  --ops-panel: rgba(255, 255, 255, 0.88);
+  --ops-panel-strong: #ffffff;
+  --ops-border: rgba(100, 116, 139, 0.12);
+  --ops-border-strong: rgba(100, 116, 139, 0.18);
+  --ops-ink: #1e293b;
+  --ops-muted: #5f6b7a;
+  --ops-command: #edf1f4;
+  --ops-command-soft: rgba(255, 255, 255, 0.72);
+  --ops-brand: #334155;
+  --ops-brand-soft: #e2e8f0;
+}
+
+body {
+  @apply m-0 min-h-screen text-slate-900 antialiased;
+  background:
+    radial-gradient(circle at top left, rgba(148, 163, 184, 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(203, 213, 225, 0.22), transparent 24%),
+    linear-gradient(180deg, #f8fafb 0%, #f3f5f7 46%, #eef1f4 100%);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 38%),
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.34), transparent 56%);
+}
+
+textarea {
+  resize: vertical;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.65);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#root {
+  @apply min-h-screen;
+}
+
+::selection {
+  @apply bg-brand-100 text-slate-900;
+}
+
+@layer components {
+  .font-display {
+    font-family: "Newsreader", "Times New Roman", serif;
+  }
+
+  .surface-panel {
+    @apply rounded-[30px] border shadow-[0_28px_80px_rgba(15,23,42,0.06)] backdrop-blur-xl;
+    background: var(--ops-panel);
+    border-color: var(--ops-border);
+  }
+
+  .surface-subtle {
+    @apply rounded-[24px] border;
+    background: rgba(248, 250, 252, 0.8);
+    border-color: rgba(203, 213, 225, 0.64);
+  }
+
+  .surface-command {
+    @apply rounded-[32px] border shadow-[0_26px_72px_rgba(15,23,42,0.08)];
+    background:
+      radial-gradient(circle at top right, rgba(203, 213, 225, 0.68), transparent 24%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(243, 246, 248, 0.94) 54%, rgba(236, 241, 244, 0.96) 100%);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  .surface-command-subtle {
+    @apply rounded-[26px] border;
+    background: rgba(255, 255, 255, 0.74);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  .section-heading {
+    @apply text-[1.8rem] font-semibold tracking-tight text-slate-950;
+  }
+
+  .section-kicker {
+    @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500;
+    font-family: "IBM Plex Mono", monospace;
+  }
+
+  .section-copy {
+    @apply text-sm leading-7 text-slate-600;
+  }
+
+  .info-chip {
+    @apply inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm;
+  }
+
+  .field-shell {
+    @apply rounded-[26px] border bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.72)];
+    border-color: rgba(203, 213, 225, 0.7);
+  }
+
+  .field-label {
+    @apply mb-3 block text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500;
+    font-family: "IBM Plex Mono", monospace;
+  }
+
+  .input-base {
+    @apply w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100/60;
+    border-color: rgba(203, 213, 225, 0.78);
+  }
+
+  .textarea-base {
+    @apply min-h-[320px] w-full rounded-[24px] border bg-white px-4 py-4 text-sm leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100/60;
+    border-color: rgba(203, 213, 225, 0.78);
+  }
+
+  .select-base {
+    @apply rounded-2xl border bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100/60;
+    border-color: rgba(203, 213, 225, 0.78);
+  }
+
+  .btn-primary {
+    @apply inline-flex h-12 items-center justify-center rounded-2xl px-5 text-sm font-medium text-white transition focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60;
+    background: linear-gradient(135deg, #1f2937 0%, #334155 48%, #475569 100%);
+    box-shadow: 0 14px 30px rgba(51, 65, 85, 0.18);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    @apply inline-flex h-11 items-center justify-center rounded-2xl border bg-white px-4 text-sm font-medium text-slate-700 transition focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60;
+    border-color: rgba(203, 213, 225, 0.82);
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(148, 163, 184, 0.72);
+    background: rgba(248, 250, 252, 0.94);
+  }
+
+  .btn-secondary-dark {
+    @apply text-white focus:ring-slate-700;
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(15, 23, 42, 0.76);
+  }
+
+  .btn-secondary-dark:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(15, 23, 42, 0.88);
+  }
+
+  .btn-ghost {
+    @apply inline-flex h-10 items-center justify-center rounded-2xl border border-transparent px-4 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-danger {
+    @apply inline-flex h-10 items-center justify-center rounded-2xl border border-red-200 bg-white px-4 text-xs font-medium text-red-600 transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .status-banner {
+    @apply rounded-2xl border px-4 py-3 text-sm shadow-sm;
+  }
+
+  .toast-panel {
+    @apply rounded-2xl backdrop-blur-md;
+    animation: toast-slide-in 180ms ease-out;
+  }
+
+  .metric-card {
+    @apply rounded-[24px] border p-4;
+    background: rgba(255, 255, 255, 0.74);
+    border-color: rgba(203, 213, 225, 0.48);
+  }
+
+  .metric-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500;
+    font-family: "IBM Plex Mono", monospace;
+  }
+
+  .metric-value {
+    @apply mt-3 text-2xl font-semibold tracking-tight text-white;
+  }
+
+  .metric-detail {
+    @apply mt-2 text-sm leading-6 text-slate-300;
+  }
+
+  .status-pill {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700;
+    font-family: "IBM Plex Mono", monospace;
+    background: rgba(255, 255, 255, 0.82);
+  }
+
+  .status-pill-light {
+    @apply text-slate-200;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .status-pill-soft {
+    @apply bg-slate-100 text-slate-600;
+  }
+
+  .status-dot {
+    @apply inline-block h-2.5 w-2.5 rounded-full bg-emerald-500;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+  }
+
+  .style-toggle {
+    @apply rounded-[24px] border px-4 py-4 text-left text-slate-700 transition;
+    border-color: rgba(203, 213, 225, 0.72);
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .style-toggle:hover {
+    transform: translateY(-1px);
+    border-color: rgba(100, 116, 139, 0.58);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.06);
+  }
+
+  .style-toggle-active {
+    color: #f8fafc;
+    border-color: rgba(51, 65, 85, 0.52);
+    background: linear-gradient(135deg, #1f2937 0%, #334155 100%);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.14);
+  }
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
