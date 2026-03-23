@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { optimizeResume } from "./api";
+import { localizeApiMessage, optimizeResume } from "./api";
 import AuthPanel from "./components/AuthPanel";
 import ConfirmDialog from "./components/ConfirmDialog";
 import HistoryFilters from "./components/HistoryFilters";
@@ -14,11 +14,17 @@ import { buildCombinedResultsText, formatSuggestionsText } from "./utils/text";
 
 const STYLE_OPTIONS = ["Professional", "Concise", "Achievement-Oriented"];
 const ALL_STYLE = "All";
+const ALL_STYLE_LABEL = "全部";
 const TOKEN_KEY = "resume_assistant_token";
+const STYLE_LABELS = {
+  Professional: "专业",
+  Concise: "简洁",
+  "Achievement-Oriented": "成果导向",
+};
 const STYLE_COPY = {
-  Professional: "Balanced phrasing for formal applications and clean readability.",
-  Concise: "Trims noise and keeps the strongest evidence in quick-scanning shape.",
-  "Achievement-Oriented": "Pushes measurable impact and outcome-driven storytelling.",
+  Professional: "适合正式求职申请，表达均衡，阅读体验清晰。",
+  Concise: "压缩冗余信息，突出最关键的证据与重点。",
+  "Achievement-Oriented": "强化量化成果与结果导向的叙述方式。",
 };
 
 export default function App() {
@@ -39,7 +45,7 @@ export default function App() {
   const suggestionsText = useMemo(() => formatSuggestionsText(suggestions), [suggestions]);
   const activeToast = error ? { type: "error", message: error } : infoMessage ? { type: "success", message: infoMessage } : null;
   const hasResults = Boolean(optimizedResume || matchAnalysis || suggestions.length);
-  const workspaceStatus = hasResults ? "Results ready" : submitting ? "Running optimization" : "Awaiting source material";
+  const workspaceStatus = hasResults ? "结果已就绪" : submitting ? "正在优化" : "等待输入内容";
 
   useEffect(() => {
     if (!infoMessage) {
@@ -148,42 +154,42 @@ export default function App() {
   });
 
   const headerMetrics = [
-    { label: "Saved Runs", value: totalRecords, detail: "Reusable history archive" },
-    { label: "Playbooks", value: STYLE_OPTIONS.length, detail: "Optimization modes available" },
-    { label: "Workspace", value: workspaceStatus, detail: hasResults ? "Current output package is available" : "Load resume and job description to begin" },
+    { label: "已保存记录", value: totalRecords, detail: "可复用的历史归档" },
+    { label: "优化模式", value: STYLE_OPTIONS.length, detail: "可用的优化模式" },
+    { label: "工作区", value: workspaceStatus, detail: hasResults ? "当前输出内容已可查看" : "载入简历和职位描述后即可开始" },
   ];
 
   async function copyText(text) {
     if (!text) {
-      setInfoMessage("Nothing to copy yet.");
+      setInfoMessage("暂无可复制内容。");
       return;
     }
 
     try {
       await navigator.clipboard.writeText(text);
-      setInfoMessage("Copied to clipboard.");
+      setInfoMessage("已复制到剪贴板。");
     } catch {
-      setInfoMessage("Copy failed. Please copy manually.");
+      setInfoMessage("复制失败，请手动复制。");
     }
   }
 
   function exportMarkdown() {
     exportMarkdownFile({ style, optimizedResume, matchAnalysis, suggestions });
-    setInfoMessage("Markdown exported.");
+    setInfoMessage("已导出 Markdown。");
   }
 
   async function exportPdf() {
     try {
       await exportPdfFile({ style, optimizedResume, matchAnalysis, suggestions });
-      setInfoMessage("PDF exported.");
+      setInfoMessage("已导出 PDF。");
     } catch {
-      setError("PDF export failed.");
+      setError("PDF 导出失败。");
     }
   }
 
   async function handleOptimize() {
     if (!resumeText.trim() || !jdText.trim()) {
-      setError("Please fill both Resume and JD fields.");
+      setError("请同时填写简历和职位描述。");
       return;
     }
 
@@ -208,10 +214,12 @@ export default function App() {
       setFallbackReason(data.fallback_reason || "");
 
       await loadRecords(1);
-      setInfoMessage("Optimization complete.");
+      setInfoMessage("优化完成。");
     } catch (err) {
-      if (!handleAuthError(err.message)) {
-        setError(err.message || "Optimization failed");
+      const message = localizeApiMessage(err.message);
+
+      if (!handleAuthError(message)) {
+        setError(message || "简历优化失败");
       }
     } finally {
       setSubmitting(false);
@@ -255,9 +263,9 @@ export default function App() {
       />
       <ConfirmDialog
         open={Boolean(pendingDeleteRecord)}
-        title={`Delete record #${pendingDeleteRecord?.display_number || pendingDeleteRecord?.id || ""}?`}
-        description="This removes the saved run from your archive. It will not change the content currently loaded in the workspace."
-        confirmLabel="Delete Record"
+        title={`删除记录 #${pendingDeleteRecord?.display_number || pendingDeleteRecord?.id || ""}？`}
+        description="这会从归档中移除这次保存记录，但不会影响当前工作区里已加载的内容。"
+        confirmLabel="删除记录"
         onConfirm={confirmDeleteRecord}
         onCancel={cancelDeleteRecord}
       />
@@ -266,20 +274,20 @@ export default function App() {
           <div className="grid gap-8 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.9fr)] xl:items-end">
             <div className="space-y-6">
               <div className="space-y-4">
-                <span className="status-pill">Product Operations Console</span>
+                <span className="status-pill">产品运营控制台</span>
                 <div className="max-w-3xl space-y-4">
                   <h1 className="font-display text-4xl leading-tight tracking-[-0.03em] text-slate-950 md:text-5xl">
-                    Resume optimization that looks and feels like a real hiring product.
+                    像真实招聘产品一样完成简历优化。
                   </h1>
                   <p className="max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
-                    Refine source material, run structured AI rewrites, and keep every iteration in a searchable archive.
-                    The workspace is tuned for clarity, speed, and trustworthy review.
+                    整理原始材料，运行结构化智能改写，并把每次迭代保存在可检索的归档里。
+                    这个工作区强调清晰、高效和可靠审阅。
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2.5">
-                  <span className="info-chip">Professional SaaS surface</span>
-                  <span className="info-chip">Per-user history archive</span>
-                  <span className="info-chip">Copy and export ready</span>
+                  <span className="info-chip">专业业务界面</span>
+                  <span className="info-chip">按用户隔离的历史归档</span>
+                  <span className="info-chip">支持复制与导出</span>
                 </div>
               </div>
 
@@ -298,29 +306,29 @@ export default function App() {
               <div className="flex flex-col gap-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="field-label text-slate-500">Workspace Owner</p>
+                    <p className="field-label text-slate-500">当前用户</p>
                     <p className="text-lg font-semibold tracking-tight text-slate-950">{currentUser?.username || "..."}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">Authenticated session with record history, export actions, and recovery controls.</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">当前会话已启用历史记录、导出操作和恢复控制。</p>
                   </div>
                   <button onClick={logout} className="btn-secondary">
-                    Logout
+                    退出登录
                   </button>
                 </div>
 
                 <div className="space-y-3">
                   <div className="rounded-[20px] bg-white/90 px-4 py-4">
-                    <p className="field-label text-slate-500">Current State</p>
+                    <p className="field-label text-slate-500">当前状态</p>
                     <div className="mt-2 flex items-center gap-3">
                       <span className="status-dot" />
                       <p className="text-sm font-medium text-slate-800">{workspaceStatus}</p>
                     </div>
                   </div>
                   <div className="rounded-[20px] bg-white/80 px-4 py-4">
-                    <p className="field-label text-slate-500">Operator Notes</p>
+                    <p className="field-label text-slate-500">操作提示</p>
                     <ul className="space-y-2 text-sm leading-6 text-slate-600">
-                      <li>Use the left workspace to prepare source content and choose the rewrite posture.</li>
-                      <li>Use the results area to review optimized copy, analysis notes, and next-step suggestions.</li>
-                      <li>Use the archive to restore prior runs without losing the current working draft.</li>
+                      <li>使用左侧工作区准备原始内容并选择改写风格。</li>
+                      <li>在结果区域查看优化后的文案、分析说明和后续建议。</li>
+                      <li>使用归档可恢复之前的运行结果，同时保留当前工作草稿。</li>
                     </ul>
                   </div>
                 </div>
@@ -340,6 +348,7 @@ export default function App() {
               setStyle={setStyle}
               styleOptions={STYLE_OPTIONS}
               styleCopy={STYLE_COPY}
+              styleLabels={STYLE_LABELS}
               onCopyAll={() => copyText(buildCombinedResultsText({ optimizedResume, matchAnalysis, suggestionsText }))}
               onExportMarkdown={exportMarkdown}
               onExportPdf={exportPdf}
@@ -371,6 +380,7 @@ export default function App() {
               onRequestDelete={requestDeleteRecord}
               onPreviousPage={goToPreviousPage}
               onNextPage={goToNextPage}
+              styleLabels={STYLE_LABELS}
               filters={
                 <HistoryFilters
                   searchKeyword={searchKeyword}
@@ -378,7 +388,9 @@ export default function App() {
                   historyStyleFilter={historyStyleFilter}
                   setHistoryStyleFilter={setHistoryStyleFilter}
                   allStyle={ALL_STYLE}
+                  allStyleLabel={ALL_STYLE_LABEL}
                   styleOptions={STYLE_OPTIONS}
+                  styleLabels={STYLE_LABELS}
                   onApplyFilters={handleApplyFilters}
                 />
               }

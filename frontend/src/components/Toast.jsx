@@ -8,7 +8,7 @@ export default function Toast({ message, type = "success", onClose }) {
       ? "bg-red-50/95 text-red-700 shadow-[0_18px_50px_rgba(220,38,38,0.12)]"
       : "bg-white/95 text-slate-700 shadow-[0_18px_50px_rgba(15,23,42,0.12)]";
 
-  const label = type === "error" ? "Error" : "Workspace Update";
+  const label = type === "error" ? "错误" : "工作区提示";
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-5 z-50 flex justify-center px-4 md:justify-end md:px-8">
@@ -25,9 +25,9 @@ export default function Toast({ message, type = "success", onClose }) {
           type="button"
           onClick={onClose}
           className="rounded-lg px-2 py-1 text-sm font-medium text-current/70 transition hover:bg-black/5 hover:text-current"
-          aria-label="Close notification"
+          aria-label="关闭通知"
         >
-          Close
+          关闭
         </button>
       </div>
     </div>

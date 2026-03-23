@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { fetchMe, loginUser, registerUser } from "../api";
+import { fetchMe, localizeApiMessage, loginUser, registerUser } from "../api";
 
 export default function useAuth({ tokenKey, onError, onInfo, onAuthenticated, onLogout }) {
   const [token, setToken] = useState(localStorage.getItem(tokenKey) || "");
@@ -18,9 +18,19 @@ export default function useAuth({ tokenKey, onError, onInfo, onAuthenticated, on
   }
 
   function handleAuthError(errMessage) {
-    if (String(errMessage).toLowerCase().includes("could not validate credentials")) {
+    const normalizedMessage = String(errMessage || "");
+    const lowerMessage = normalizedMessage.toLowerCase();
+
+    if (
+      lowerMessage.includes("could not validate credentials") ||
+      lowerMessage.includes("not authenticated") ||
+      lowerMessage.includes("invalid authentication credentials") ||
+      normalizedMessage.includes("无法验证登录凭证") ||
+      normalizedMessage.includes("未登录") ||
+      normalizedMessage.includes("登录凭证无效")
+    ) {
       logout();
-      onError("Session expired. Please login again.");
+      onError("登录已过期，请重新登录。");
       return true;
     }
 
@@ -29,7 +39,7 @@ export default function useAuth({ tokenKey, onError, onInfo, onAuthenticated, on
 
   async function handleAuthSubmit() {
     if (!authUsername.trim() || !authPassword.trim()) {
-      onError("Please input username and password.");
+      onError("请输入用户名和密码。");
       return;
     }
 
@@ -40,7 +50,7 @@ export default function useAuth({ tokenKey, onError, onInfo, onAuthenticated, on
     try {
       if (authMode === "register") {
         await registerUser({ username: authUsername.trim(), password: authPassword });
-        onInfo("Registration successful. Please login.");
+        onInfo("注册成功，请登录。");
         setAuthMode("login");
         return;
       }
@@ -48,9 +58,9 @@ export default function useAuth({ tokenKey, onError, onInfo, onAuthenticated, on
       const data = await loginUser({ username: authUsername.trim(), password: authPassword });
       localStorage.setItem(tokenKey, data.access_token);
       setToken(data.access_token);
-      onInfo("Login successful.");
+      onInfo("登录成功。");
     } catch (err) {
-      onError(err.message || "Authentication failed");
+      onError(localizeApiMessage(err.message) || "身份验证失败");
     } finally {
       setAuthSubmitting(false);
     }
@@ -67,8 +77,10 @@ export default function useAuth({ tokenKey, onError, onInfo, onAuthenticated, on
         setCurrentUser(me);
         await onAuthenticated(token);
       } catch (err) {
-        if (!handleAuthError(err.message)) {
-          onError(err.message || "Failed to load profile");
+        const message = localizeApiMessage(err.message);
+
+        if (!handleAuthError(message)) {
+          onError(message || "加载用户信息失败");
         }
       }
     }

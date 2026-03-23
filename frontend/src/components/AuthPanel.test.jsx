@@ -20,7 +20,7 @@ describe("AuthPanel", () => {
       />
     );
 
-    fireEvent.keyDown(screen.getByLabelText("Password"), { key: "Enter", code: "Enter" });
+    fireEvent.keyDown(screen.getByLabelText("密码"), { key: "Enter", code: "Enter" });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
@@ -39,7 +39,7 @@ describe("AuthPanel", () => {
       />
     );
 
-    expect(screen.getByRole("heading", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "登录" })).toBeInTheDocument();
     expect(screen.queryByText("Operations Console")).not.toBeInTheDocument();
   });
 });

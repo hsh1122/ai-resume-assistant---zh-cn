@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { deleteRecordById, fetchRecordById, fetchRecords } from "../api";
+import { deleteRecordById, fetchRecordById, fetchRecords, localizeApiMessage } from "../api";
 
 const PAGE_SIZE = 5;
 
@@ -41,10 +41,12 @@ export default function useHistoryRecords({
       setTotalPages(nextTotalPages);
       setTotalRecords(data.total || 0);
       setPage(nextPage);
-      setHistoryStatus(data.total ? "" : "No saved runs yet.");
+      setHistoryStatus(data.total ? "" : "暂无已保存记录。");
     } catch (err) {
-      if (!onAuthError(err.message)) {
-        onError(err.message || "Failed to load history records");
+      const message = localizeApiMessage(err.message);
+
+      if (!onAuthError(message)) {
+        onError(message || "加载历史记录失败");
       }
     } finally {
       setLoadingRecords(false);
@@ -68,11 +70,13 @@ export default function useHistoryRecords({
         suggestions: Array.isArray(data.suggestions) ? data.suggestions : [],
       });
       setActiveRecordId(recordId);
-      setHistoryStatus(`Record #${displayNumber} opened.`);
-      onInfo(`Record #${displayNumber} opened.`);
+      setHistoryStatus(`记录 #${displayNumber} 已打开。`);
+      onInfo(`记录 #${displayNumber} 已打开。`);
     } catch (err) {
-      if (!onAuthError(err.message)) {
-        onError(err.message || "Failed to load selected record");
+      const message = localizeApiMessage(err.message);
+
+      if (!onAuthError(message)) {
+        onError(message || "加载所选记录失败");
       }
     }
   }
@@ -102,11 +106,13 @@ export default function useHistoryRecords({
       if (activeRecordId === recordId) {
         setActiveRecordId(null);
       }
-      setHistoryStatus(`Record #${displayNumber} deleted.`);
-      onInfo(`Record #${displayNumber} deleted.`);
+      setHistoryStatus(`记录 #${displayNumber} 已删除。`);
+      onInfo(`记录 #${displayNumber} 已删除。`);
     } catch (err) {
-      if (!onAuthError(err.message)) {
-        onError(err.message || "Failed to delete record");
+      const message = localizeApiMessage(err.message);
+
+      if (!onAuthError(message)) {
+        onError(message || "删除记录失败");
       }
     }
   }

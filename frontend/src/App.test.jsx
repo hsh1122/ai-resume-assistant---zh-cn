@@ -132,7 +132,7 @@ describe("App", () => {
     expect(screen.getByText("Resume Value: Alice resume draft")).toBeInTheDocument();
     expect(screen.getByText("JD Value: Alice job description")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Logout" }));
+    fireEvent.click(screen.getByRole("button", { name: "退出登录" }));
     expect(screen.getByText("Auth Panel")).toBeInTheDocument();
 
     act(() => {
@@ -155,7 +155,7 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByText("Auth Panel")).toBeInTheDocument();
-    expect(screen.queryByText(/Hiring Ops Dashboard/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Upgrade resumes inside a sharper/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/产品运营控制台/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/像真实招聘产品一样完成简历优化/i)).not.toBeInTheDocument();
   });
 });

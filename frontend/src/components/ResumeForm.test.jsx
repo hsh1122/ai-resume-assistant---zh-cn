@@ -16,6 +16,7 @@ describe("ResumeForm", () => {
         style="Professional"
         setStyle={setStyle}
         styleOptions={["Professional", "Concise", "Achievement-Oriented"]}
+        styleLabels={{ Professional: "专业", Concise: "简洁", "Achievement-Oriented": "成果导向" }}
         onCopyAll={vi.fn()}
         onExportMarkdown={vi.fn()}
         onExportPdf={vi.fn()}
@@ -24,11 +25,11 @@ describe("ResumeForm", () => {
       />
     );
 
-    const conciseButton = screen.getByRole("button", { name: "Concise" });
+    const conciseButton = screen.getByRole("button", { name: "简洁" });
     fireEvent.click(conciseButton);
 
     expect(setStyle).toHaveBeenCalledWith("Concise");
-    expect(screen.getByRole("button", { name: "Professional" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "专业" })).toHaveAttribute("aria-pressed", "true");
   });
 
   it("presents the form as a structured source workspace", () => {
@@ -41,7 +42,8 @@ describe("ResumeForm", () => {
         style="Professional"
         setStyle={vi.fn()}
         styleOptions={["Professional", "Concise", "Achievement-Oriented"]}
-        styleCopy={{ Professional: "Balanced phrasing for formal applications." }}
+        styleCopy={{ Professional: "适合正式求职申请。" }}
+        styleLabels={{ Professional: "专业", Concise: "简洁", "Achievement-Oriented": "成果导向" }}
         onCopyAll={vi.fn()}
         onExportMarkdown={vi.fn()}
         onExportPdf={vi.fn()}
@@ -50,8 +52,8 @@ describe("ResumeForm", () => {
       />
     );
 
-    expect(screen.getByRole("heading", { name: "Source Workspace" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Action Center" })).toBeInTheDocument();
-    expect(screen.getByText(/keep exports, mode selection, and run controls together/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "原始内容工作区" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "操作中心" })).toBeInTheDocument();
+    expect(screen.getByText(/将导出、模式选择与运行控制放在一起，让常见桌面宽度下的工作区保持紧凑/i)).toBeInTheDocument();
   });
 });

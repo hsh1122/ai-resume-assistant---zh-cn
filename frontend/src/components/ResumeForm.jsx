@@ -11,6 +11,7 @@ export default function ResumeForm({
   setStyle,
   styleOptions,
   styleCopy,
+  styleLabels,
   onCopyAll,
   onExportMarkdown,
   onExportPdf,
@@ -18,9 +19,9 @@ export default function ResumeForm({
   submitting,
 }) {
   const stats = [
-    { label: "Resume Words", value: countWords(resumeText) },
-    { label: "JD Words", value: countWords(jdText) },
-    { label: "Modes", value: styleOptions.length },
+    { label: "简历词数", value: countWords(resumeText) },
+    { label: "职位描述词数", value: countWords(jdText) },
+    { label: "模式数", value: styleOptions.length },
   ];
 
   return (
@@ -28,10 +29,10 @@ export default function ResumeForm({
       <div className="space-y-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <p className="section-kicker">Optimization Workspace</p>
-            <h2 className="section-heading mt-3">Source Workspace</h2>
+            <p className="section-kicker">优化工作区</p>
+            <h2 className="section-heading mt-3">原始内容工作区</h2>
             <p className="section-copy mt-3">
-              Prepare source material and define the output posture before running a fresh optimization pass.
+              在发起新一轮优化前，先准备原始材料并定义输出风格。
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
@@ -48,17 +49,17 @@ export default function ResumeForm({
           <div className="field-shell p-5 md:p-6">
             <div className="mb-4 flex items-start justify-between gap-3">
               <div>
-                <p className="field-label">Primary Resume</p>
-                <h3 className="text-lg font-semibold tracking-tight text-slate-950">Current resume draft</h3>
+                <p className="field-label">原始简历</p>
+                <h3 className="text-lg font-semibold tracking-tight text-slate-950">当前简历草稿</h3>
               </div>
-              <span className="status-pill status-pill-soft">{countWords(resumeText)} words</span>
+              <span className="status-pill status-pill-soft">{countWords(resumeText)} 词</span>
             </div>
-            <p className="mb-4 text-sm leading-6 text-slate-600">Paste the working version you want to refine for the next application target.</p>
+            <p className="mb-4 text-sm leading-6 text-slate-600">粘贴你希望针对下一目标岗位进行优化的当前版本。</p>
             <textarea
               value={resumeText}
               onChange={(e) => setResumeText(e.target.value)}
               rows={12}
-              placeholder="Paste your resume content..."
+              placeholder="请粘贴你的简历内容..."
               className="textarea-base"
             />
           </div>
@@ -66,17 +67,17 @@ export default function ResumeForm({
           <div className="field-shell p-5 md:p-6">
             <div className="mb-4 flex items-start justify-between gap-3">
               <div>
-                <p className="field-label">Target Role</p>
-                <h3 className="text-lg font-semibold tracking-tight text-slate-950">Job description brief</h3>
+                <p className="field-label">目标岗位</p>
+                <h3 className="text-lg font-semibold tracking-tight text-slate-950">职位描述摘要</h3>
               </div>
-              <span className="status-pill status-pill-soft">{countWords(jdText)} words</span>
+              <span className="status-pill status-pill-soft">{countWords(jdText)} 词</span>
             </div>
-            <p className="mb-4 text-sm leading-6 text-slate-600">Drop in the exact posting or requirements so the optimization can align the language and emphasis.</p>
+            <p className="mb-4 text-sm leading-6 text-slate-600">粘贴完整岗位描述或要求，方便优化时对齐措辞与重点。</p>
             <textarea
               value={jdText}
               onChange={(e) => setJdText(e.target.value)}
               rows={12}
-              placeholder="Paste target job description..."
+              placeholder="请粘贴目标职位描述..."
               className="textarea-base"
             />
           </div>
@@ -84,37 +85,37 @@ export default function ResumeForm({
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
           <div className="surface-subtle p-5 md:p-6">
-            <p className="section-kicker">Output Package</p>
-            <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">Share or export the current workspace output</h3>
+            <p className="section-kicker">输出内容</p>
+            <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">分享或导出当前工作区结果</h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Keep the latest optimization package portable without leaving the main editing flow.
+              让最新优化结果可随时带走，不打断主编辑流程。
             </p>
             <div className="mt-5 grid gap-3">
               <button onClick={onCopyAll} className="btn-secondary w-full justify-between px-4">
-                <span>Copy All Results</span>
-                <span className="text-xs uppercase tracking-[0.16em] text-slate-400">Clipboard</span>
+                <span>复制全部结果</span>
+                <span className="text-xs uppercase tracking-[0.16em] text-slate-400">剪贴板</span>
               </button>
               <button onClick={onExportMarkdown} className="btn-secondary w-full justify-between px-4">
-                <span>Export Markdown</span>
+                <span>导出 Markdown</span>
                 <span className="text-xs uppercase tracking-[0.16em] text-slate-400">.md</span>
               </button>
               <button onClick={onExportPdf} className="btn-secondary w-full justify-between px-4">
-                <span>Export PDF</span>
+                <span>导出 PDF</span>
                 <span className="text-xs uppercase tracking-[0.16em] text-slate-400">.pdf</span>
               </button>
             </div>
           </div>
 
           <div className="surface-subtle p-5 md:p-6">
-            <p className="section-kicker">Workflow Controls</p>
-            <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">Action Center</h3>
+            <p className="section-kicker">工作流控制</p>
+            <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">操作中心</h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Keep exports, mode selection, and run controls together so the workspace stays compact at common desktop widths.
+              将导出、模式选择与运行控制放在一起，让常见桌面宽度下的工作区保持紧凑。
             </p>
 
             <div className="mt-5 min-w-0">
-              <label className="field-label">Optimization Modes</label>
-              <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3" role="group" aria-label="Optimization styles">
+              <label className="field-label">优化模式</label>
+              <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3" role="group" aria-label="优化模式">
                 {styleOptions.map((option) => {
                   const isActive = style === option;
 
@@ -123,12 +124,12 @@ export default function ResumeForm({
                       key={option}
                       type="button"
                       onClick={() => setStyle(option)}
-                      aria-label={option}
+                      aria-label={styleLabels?.[option] || option}
                       aria-pressed={isActive}
                       className={`style-toggle h-full ${isActive ? "style-toggle-active" : ""}`}
                     >
-                      <span className="block text-sm font-semibold text-current">{option}</span>
-                      <span className="mt-2 block text-xs leading-6 text-current/75">{styleCopy?.[option] || "Targeted rewrite mode."}</span>
+                      <span className="block text-sm font-semibold text-current">{styleLabels?.[option] || option}</span>
+                      <span className="mt-2 block text-xs leading-6 text-current/75">{styleCopy?.[option] || "定向改写模式。"}</span>
                     </button>
                   );
                 })}
@@ -139,18 +140,18 @@ export default function ResumeForm({
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
           <div className="surface-subtle p-5 md:p-6">
-            <p className="field-label">Selected Mode</p>
-            <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{style}</p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">{styleCopy?.[style] || "Targeted rewrite mode."}</p>
+            <p className="field-label">已选模式</p>
+            <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{styleLabels?.[style] || style}</p>
+            <p className="mt-3 text-sm leading-6 text-slate-600">{styleCopy?.[style] || "定向改写模式。"}</p>
           </div>
 
           <div className="rounded-[24px] bg-slate-950 px-5 py-5 text-white md:px-6">
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
               <div className="min-w-0">
-                <p className="field-label text-slate-400">Ready Check</p>
-                <p className="mt-2 text-2xl font-semibold tracking-tight text-white">Run a new optimization pass</p>
+                <p className="field-label text-slate-400">就绪检查</p>
+                <p className="mt-2 text-2xl font-semibold tracking-tight text-white">发起新一轮优化</p>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">
-                  The current source content and selected mode will be submitted without changing your existing API flow.
+                  当前原始内容和所选模式将被提交，现有 API 流程不会发生变化。
                 </p>
               </div>
               <button
@@ -159,7 +160,7 @@ export default function ResumeForm({
                 disabled={submitting}
                 className="btn-primary min-w-[220px] w-full lg:w-auto"
               >
-                {submitting ? "Optimizing..." : "Run Optimization"}
+                {submitting ? "优化中..." : "开始优化"}
               </button>
             </div>
           </div>
