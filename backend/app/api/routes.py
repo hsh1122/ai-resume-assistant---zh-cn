@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.database import get_db
-from app.services.ai_service import optimize_resume
+from app.services.ai_service import AIProviderAuthenticationFailure, optimize_resume
 from app.services.auth_service import get_current_user
 
 router = APIRouter(prefix="/api", tags=["resume"])
@@ -16,11 +16,14 @@ def optimize(
     current_user: models.User = Depends(get_current_user),
 ):
     """Optimize resume with AI (or mock), then save record into SQLite."""
-    result = optimize_resume(
-        resume_text=payload.resume_text,
-        jd_text=payload.jd_text,
-        style=payload.style,
-    )
+    try:
+        result = optimize_resume(
+            resume_text=payload.resume_text,
+            jd_text=payload.jd_text,
+            style=payload.style,
+        )
+    except AIProviderAuthenticationFailure as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
     crud.create_record(
         db=db,

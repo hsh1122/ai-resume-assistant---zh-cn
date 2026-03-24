@@ -10,13 +10,13 @@ export default function HistoryFilters({
   onApplyFilters,
 }) {
   return (
-    <div className="surface-subtle mb-5 grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr),220px,auto]">
+    <div className="surface-subtle mb-5 grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_110px_auto]">
       <div>
         <label className="field-label">搜索</label>
         <input
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
-          placeholder="搜索简历、职位描述或分析关键词..."
+          placeholder="搜索内容关键词"
           className="input-base"
         />
       </div>

@@ -9,12 +9,16 @@ import json
 import logging
 from typing import Any, Dict, Optional
 
-from openai import OpenAI
+from openai import AuthenticationError, OpenAI, PermissionDeniedError
 
 from app.config import settings
 
 
 logger = logging.getLogger(__name__)
+
+
+class AIProviderAuthenticationFailure(Exception):
+    """Raised when the configured AI provider credentials are rejected."""
 
 
 def _log_ai_event(event: str, **details: Any) -> None:
@@ -209,6 +213,14 @@ def optimize_resume(resume_text: str, jd_text: str, style: str) -> Dict[str, Any
             "suggestions": suggestions,
             "result_source": "ai",
         }
+
+    except (AuthenticationError, PermissionDeniedError) as exc:
+        logger.exception(
+            "AI optimize event: provider_authentication_failed | model=%s, base_url=%s",
+            settings.openai_model,
+            settings.openai_base_url,
+        )
+        raise AIProviderAuthenticationFailure("AI provider authentication failed") from exc
 
     except Exception:
         logger.exception(

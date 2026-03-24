@@ -126,7 +126,6 @@ export default function App() {
     setHistoryStyleFilter,
     loadRecords,
     handleApplyFilters,
-    refreshRecords,
     goToPreviousPage,
     goToNextPage,
     handleRecordClick,
@@ -375,7 +374,6 @@ export default function App() {
               totalPages={totalPages}
               activeRecordId={activeRecordId}
               historyStatus={historyStatus}
-              onRefresh={refreshRecords}
               onRecordClick={handleRecordClick}
               onRequestDelete={requestDeleteRecord}
               onPreviousPage={goToPreviousPage}

@@ -22,7 +22,6 @@ describe("HistoryList", () => {
         totalPages={1}
         activeRecordId={7}
         historyStatus="记录 #7 已载入工作区。"
-        onRefresh={vi.fn()}
         onRecordClick={vi.fn()}
         onRequestDelete={vi.fn()}
         onPreviousPage={vi.fn()}
@@ -37,6 +36,8 @@ describe("HistoryList", () => {
     expect(screen.getByText("已载入工作区")).toBeInTheDocument();
     expect(screen.getByText("记录 #7 已载入工作区。")).toBeInTheDocument();
     expect(screen.getByText("记录 #3")).toBeInTheDocument();
+    expect(screen.getByText("共 1 条")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "刷新" })).not.toBeInTheDocument();
     expect(screen.getByText(/重新打开过往的优化结果、比较不同方案，并即时恢复工作区/i)).toBeInTheDocument();
   });
 
@@ -50,7 +51,6 @@ describe("HistoryList", () => {
         totalPages={1}
         activeRecordId={null}
         historyStatus=""
-        onRefresh={vi.fn()}
         onRecordClick={vi.fn()}
         onRequestDelete={vi.fn()}
         onPreviousPage={vi.fn()}

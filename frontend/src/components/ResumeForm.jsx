@@ -1,5 +1,5 @@
-function countWords(text) {
-  return text.trim() ? text.trim().split(/\s+/).length : 0;
+function countCharacters(text) {
+  return text.replace(/\s+/g, "").length;
 }
 
 export default function ResumeForm({
@@ -19,8 +19,8 @@ export default function ResumeForm({
   submitting,
 }) {
   const stats = [
-    { label: "简历词数", value: countWords(resumeText) },
-    { label: "职位描述词数", value: countWords(jdText) },
+    { label: "简历字数", value: countCharacters(resumeText) },
+    { label: "职位描述字数", value: countCharacters(jdText) },
     { label: "模式数", value: styleOptions.length },
   ];
 
@@ -52,7 +52,7 @@ export default function ResumeForm({
                 <p className="field-label">原始简历</p>
                 <h3 className="text-lg font-semibold tracking-tight text-slate-950">当前简历草稿</h3>
               </div>
-              <span className="status-pill status-pill-soft">{countWords(resumeText)} 词</span>
+              <span className="status-pill status-pill-soft">{countCharacters(resumeText)} 字</span>
             </div>
             <p className="mb-4 text-sm leading-6 text-slate-600">粘贴你希望针对下一目标岗位进行优化的当前版本。</p>
             <textarea
@@ -70,7 +70,7 @@ export default function ResumeForm({
                 <p className="field-label">目标岗位</p>
                 <h3 className="text-lg font-semibold tracking-tight text-slate-950">职位描述摘要</h3>
               </div>
-              <span className="status-pill status-pill-soft">{countWords(jdText)} 词</span>
+              <span className="status-pill status-pill-soft">{countCharacters(jdText)} 字</span>
             </div>
             <p className="mb-4 text-sm leading-6 text-slate-600">粘贴完整岗位描述或要求，方便优化时对齐措辞与重点。</p>
             <textarea

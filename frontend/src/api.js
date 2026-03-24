@@ -6,6 +6,7 @@ const MESSAGE_COPY = {
   "Failed to login": "登录失败",
   "Failed to fetch profile": "加载用户信息失败",
   "Failed to optimize resume": "简历优化失败",
+  "AI provider authentication failed": "AI 服务鉴权失败，请检查后端 OPENAI_API_KEY 是否有效",
   "Failed to load records": "加载记录失败",
   "Failed to load record detail": "加载记录详情失败",
   "Failed to delete record": "删除记录失败",

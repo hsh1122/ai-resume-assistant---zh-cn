@@ -24,7 +24,6 @@ export default function HistoryList({
   totalPages,
   activeRecordId,
   historyStatus,
-  onRefresh,
   onRecordClick,
   onRequestDelete,
   onPreviousPage,
@@ -43,16 +42,8 @@ export default function HistoryList({
               重新打开过往的优化结果、比较不同方案，并即时恢复工作区。
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="status-pill status-pill-soft">共 {totalRecords} 条</span>
-            <button
-              type="button"
-              onClick={onRefresh}
-              className="btn-secondary"
-              disabled={loadingRecords}
-            >
-              {loadingRecords ? "加载中..." : "刷新"}
-            </button>
+          <div className="flex items-center lg:flex-1 lg:justify-end">
+            <span className="status-pill status-pill-soft whitespace-nowrap">共 {totalRecords} 条</span>
           </div>
         </div>
       </div>
