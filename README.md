@@ -1,9 +1,11 @@
 # AI Resume Assistant
 
-AI Resume Assistant is a small full-stack project for tailoring resumes to a target job description.
-It combines a React dashboard, a FastAPI backend, JWT authentication, SQLite persistence, and an OpenAI-compatible AI layer with a local mock fallback.
+AI Resume Assistant is a small full-stack workspace for tailoring a resume to a target job description.
+It combines a React dashboard, a FastAPI backend, JWT authentication, SQLite persistence, and an OpenAI-compatible AI layer with a deterministic mock fallback.
 
-Users can register, log in, paste a resume and job description, choose an optimization style, run a rewrite, review structured output, export results, and reopen previous runs from a personal history archive.
+The current product focuses on one tight loop: log in, prepare source material, run an optimization, review the structured output, copy what you need, and reopen previous runs from your personal history archive.
+
+The UI is localized to Chinese. The screenshots below use English sample resume content for readability while reflecting the current interface.
 
 ## Screenshots
 
@@ -11,37 +13,40 @@ Users can register, log in, paste a resume and job description, choose an optimi
 
 ![Dashboard overview](docs/images/dashboard-overview.png)
 
-Full authenticated workspace with the source editor, result panels, and history archive in one screen.
+Authenticated dashboard overview with the source workspace, quick actions, and history archive visible together.
 
 ### Feature Gallery
 
 | Login / Register | Source Workspace |
 | --- | --- |
 | ![Login screen](docs/images/login-screen.png) | ![Source workspace](docs/images/source-workspace.png) |
-| Auth gate with login and registration modes backed by JWT auth routes. | Resume and JD inputs, style selection, export actions, and the optimization trigger. |
+| Auth gate with login and registration modes backed by JWT auth routes. | Resume and JD inputs, quick copy actions, mode selection, and the optimization trigger. |
 
 | Results Review | History Archive |
 | --- | --- |
 | ![Results panel](docs/images/results-panel.png) | ![History archive](docs/images/history-archive.png) |
-| Structured output with optimized resume text, match analysis, suggestions, and result source state. | Per-user saved runs with search, style filter, pagination, restore, and delete actions. |
+| Structured output with optimized resume text, match analysis, suggestions, and section-level copy actions. | Per-user saved runs with search, style filter, pagination, restore, and delete actions. |
 
 ## What The App Does
 
 - Registers users and authenticates them with JWT-based login.
 - Lets authenticated users submit `resume_text`, `jd_text`, and a selected optimization style.
-- Returns three structured result blocks: optimized resume, match analysis, and suggestions.
 - Supports three rewrite modes: Professional, Concise, and Achievement-Oriented.
+- Returns three structured result blocks: optimized resume, match analysis, and suggestions.
+- Lets users copy the full result package from the source workspace.
+- Lets users copy individual result sections from the review area.
 - Stores optimization history per user in SQLite.
 - Lets users search history, filter by style, reopen a saved run, and delete records.
-- Supports copy-to-clipboard plus Markdown and PDF export from the frontend.
 - Exposes FastAPI docs at `http://127.0.0.1:8000/docs`.
 
 ## Tech Stack
 
-- Frontend: React 18, Vite 5, Tailwind CSS, jsPDF
+- Frontend: React 18, Vite 5, Tailwind CSS
 - Backend: FastAPI, SQLAlchemy 2, SQLite, Pydantic Settings
 - Auth: JWT via `python-jose` and password hashing via `passlib`
 - AI: OpenAI Python SDK against an OpenAI-compatible base URL
+- Frontend testing: Vitest + Testing Library
+- Backend testing: `unittest`
 
 ## Product Flow
 
@@ -50,7 +55,7 @@ Full authenticated workspace with the source editor, result panels, and history 
 3. Choose an optimization mode.
 4. Run the optimization request.
 5. Review the generated resume package.
-6. Export the result as Markdown or PDF if needed.
+6. Copy the combined result when needed.
 7. Reopen or delete previous runs from the history archive.
 
 ## Repository Structure
@@ -78,6 +83,7 @@ Full authenticated workspace with the source editor, result panels, and history 
 |   +-- tests/
 |   \-- requirements.txt
 \-- docs/
+    +-- PROJECT_NOTES.md
     \-- images/
 ```
 
@@ -85,6 +91,9 @@ Full authenticated workspace with the source editor, result panels, and history 
 
 - `frontend/src/App.jsx`: top-level app shell, auth gate, source workspace, results, and history layout
 - `frontend/src/api.js`: browser-side API wrappers
+- `frontend/src/components/ResumeForm.jsx`: source inputs, quick copy card, mode controls, and optimization trigger
+- `frontend/src/components/OptimizationResult.jsx`: structured results review with per-section copy
+- `frontend/src/components/HistoryList.jsx`: history archive shell, saved record cards, and pagination controls
 - `backend/app/main.py`: FastAPI app creation, CORS, router wiring, DB init
 - `backend/app/api/auth_routes.py`: register, login, and current-user endpoints
 - `backend/app/api/routes.py`: optimize, list records, get record, delete record
@@ -182,6 +191,8 @@ The backend may also include `fallback_reason` values such as:
 - `empty_ai_response`
 - `incomplete_ai_payload`
 
+If provider credentials are invalid, the API returns an explicit authentication/configuration error instead of silently returning mock output.
+
 ## API Overview
 
 ### Auth
@@ -236,4 +247,5 @@ cd backend
 - This repo currently uses plain JavaScript on the frontend, not TypeScript.
 - The app is a single-page dashboard with an auth gate rather than a multi-route frontend.
 - SQLite is the tracked local database default.
-- If the backend has no valid AI configuration, the UI still works because the service falls back to deterministic mock output.
+- Export actions were intentionally removed; the current outbound path is copy-to-clipboard plus history reuse.
+- `docs/PROJECT_NOTES.md` stores lightweight handoff notes for future sessions.
