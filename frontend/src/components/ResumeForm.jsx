@@ -81,18 +81,31 @@ export default function ResumeForm({
           </div>
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
-          <div className="surface-subtle p-5 md:p-6">
-            <p className="section-kicker">输出内容</p>
-            <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">复制当前工作区结果</h3>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              让最新优化结果可以一键复制到别处使用，不打断主编辑流程。
-            </p>
-            <div className="mt-5 grid gap-3">
-              <button onClick={onCopyAll} className="btn-secondary w-full justify-between px-4">
-                <span>复制全部结果</span>
-                <span className="text-xs uppercase tracking-[0.16em] text-slate-400">剪贴板</span>
-              </button>
+        <div className="space-y-5 xl:grid xl:grid-cols-[minmax(0,0.76fr)_minmax(0,1.24fr)] xl:gap-5 xl:space-y-0">
+          <div className="surface-subtle p-5 md:p-6 xl:flex xl:h-full xl:flex-col">
+            <div>
+              <p className="section-kicker">快捷操作</p>
+              <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-950">快速复制结果</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                一键复制当前的优化结果、匹配分析和建议，便于直接粘贴到别处使用。
+              </p>
+              <div className="mt-4 grid gap-3">
+                <button onClick={onCopyAll} className="btn-secondary w-full justify-between px-4">
+                  <span>复制全部结果</span>
+                  <span className="text-xs uppercase tracking-[0.16em] text-slate-400">剪贴板</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-5 hidden rounded-[20px] border border-slate-200/80 bg-white/75 px-4 py-4 xl:block">
+              <p className="field-label">当前模式</p>
+              <p className="mt-2 text-lg font-semibold tracking-tight text-slate-950">{styleLabels?.[style] || style}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{styleCopy?.[style] || "定向改写模式。"}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="status-pill status-pill-soft whitespace-nowrap">优化结果</span>
+                <span className="status-pill status-pill-soft whitespace-nowrap">匹配分析</span>
+                <span className="status-pill status-pill-soft whitespace-nowrap">建议</span>
+              </div>
             </div>
           </div>
 
@@ -126,16 +139,14 @@ export default function ResumeForm({
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
-          <div className="surface-subtle p-5 md:p-6">
+          <div className="surface-subtle p-5 md:p-6 xl:hidden">
             <p className="field-label">已选模式</p>
             <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{styleLabels?.[style] || style}</p>
             <p className="mt-3 text-sm leading-6 text-slate-600">{styleCopy?.[style] || "定向改写模式。"}</p>
           </div>
 
-          <div className="rounded-[24px] bg-slate-950 px-5 py-5 text-white md:px-6">
+          <div className="rounded-[24px] bg-slate-950 px-5 py-5 text-white md:px-6 xl:col-span-2">
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
               <div className="min-w-0">
                 <p className="field-label text-slate-400">就绪检查</p>

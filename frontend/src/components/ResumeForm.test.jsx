@@ -38,24 +38,32 @@ describe("ResumeForm", () => {
     expect(screen.getByRole("button", { name: "专业" })).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("keeps only copy action and removes export actions", () => {
+  it("uses desktop-only mode summary inside the copy card and keeps the mobile mode card", () => {
     render(<ResumeForm {...baseProps} />);
 
-    expect(screen.getAllByRole("textbox")).toHaveLength(2);
+    expect(screen.getByRole("heading", { name: "快速复制结果" })).toBeInTheDocument();
+    expect(
+      screen.getByText(/一键复制当前的优化结果、匹配分析和建议，便于直接粘贴到别处使用/i)
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /复制全部结果/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Markdown/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /PDF/i })).not.toBeInTheDocument();
-    expect(screen.getByText(/将模式选择与运行控制放在一起，让常见桌面宽度下的工作区保持紧凑/i)).toBeInTheDocument();
+
+    const copyCard = screen.getByRole("heading", { name: "快速复制结果" }).closest(".surface-subtle");
+    const desktopModePanel = screen.getByText("当前模式").closest("div");
+    const mobileModeCard = screen.getAllByText("已选模式")[0].closest(".surface-subtle");
+    const optimizeCard = screen.getByRole("button", { name: "开始优化" }).closest(".bg-slate-950");
+    const layout = copyCard?.parentElement;
+
+    expect(copyCard).toHaveClass("xl:h-full");
+    expect(desktopModePanel).toHaveClass("hidden", "xl:block");
+    expect(mobileModeCard).toHaveClass("xl:hidden");
+    expect(optimizeCard).toHaveClass("xl:col-span-2");
+    expect(layout).toHaveClass("space-y-5", "xl:grid", "xl:space-y-0");
   });
 
   it("shows character counts for Chinese and mixed-language content", () => {
-    render(
-      <ResumeForm
-        {...baseProps}
-        resumeText="你好世界"
-        jdText="AI 产品经理"
-      />
-    );
+    render(<ResumeForm {...baseProps} resumeText="你好世界" jdText="AI 产品经理" />);
 
     expect(screen.getByText("简历字数")).toBeInTheDocument();
     expect(screen.getByText("职位描述字数")).toBeInTheDocument();
