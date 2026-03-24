@@ -9,7 +9,6 @@ import ResumeForm from "./components/ResumeForm";
 import Toast from "./components/Toast";
 import useAuth from "./hooks/useAuth";
 import useHistoryRecords from "./hooks/useHistoryRecords";
-import { exportMarkdownFile, exportPdfFile } from "./utils/export";
 import { buildCombinedResultsText, formatSuggestionsText } from "./utils/text";
 
 const STYLE_OPTIONS = ["Professional", "Concise", "Achievement-Oriented"];
@@ -172,20 +171,6 @@ export default function App() {
     }
   }
 
-  function exportMarkdown() {
-    exportMarkdownFile({ style, optimizedResume, matchAnalysis, suggestions });
-    setInfoMessage("已导出 Markdown。");
-  }
-
-  async function exportPdf() {
-    try {
-      await exportPdfFile({ style, optimizedResume, matchAnalysis, suggestions });
-      setInfoMessage("已导出 PDF。");
-    } catch {
-      setError("PDF 导出失败。");
-    }
-  }
-
   async function handleOptimize() {
     if (!resumeText.trim() || !jdText.trim()) {
       setError("请同时填写简历和职位描述。");
@@ -286,7 +271,7 @@ export default function App() {
                 <div className="flex flex-wrap gap-2.5">
                   <span className="info-chip">专业业务界面</span>
                   <span className="info-chip">按用户隔离的历史归档</span>
-                  <span className="info-chip">支持复制与导出</span>
+                  <span className="info-chip">支持复制与归档</span>
                 </div>
               </div>
 
@@ -307,7 +292,7 @@ export default function App() {
                   <div>
                     <p className="field-label text-slate-500">当前用户</p>
                     <p className="text-lg font-semibold tracking-tight text-slate-950">{currentUser?.username || "..."}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">当前会话已启用历史记录、导出操作和恢复控制。</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">当前会话已启用历史记录、复制操作和恢复控制。</p>
                   </div>
                   <button onClick={logout} className="btn-secondary">
                     退出登录
@@ -349,8 +334,6 @@ export default function App() {
               styleCopy={STYLE_COPY}
               styleLabels={STYLE_LABELS}
               onCopyAll={() => copyText(buildCombinedResultsText({ optimizedResume, matchAnalysis, suggestionsText }))}
-              onExportMarkdown={exportMarkdown}
-              onExportPdf={exportPdf}
               onOptimize={handleOptimize}
               submitting={submitting}
             />

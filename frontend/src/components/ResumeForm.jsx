@@ -13,8 +13,6 @@ export default function ResumeForm({
   styleCopy,
   styleLabels,
   onCopyAll,
-  onExportMarkdown,
-  onExportPdf,
   onOptimize,
   submitting,
 }) {
@@ -86,22 +84,14 @@ export default function ResumeForm({
         <div className="grid gap-5 xl:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
           <div className="surface-subtle p-5 md:p-6">
             <p className="section-kicker">输出内容</p>
-            <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">分享或导出当前工作区结果</h3>
+            <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">复制当前工作区结果</h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              让最新优化结果可随时带走，不打断主编辑流程。
+              让最新优化结果可以一键复制到别处使用，不打断主编辑流程。
             </p>
             <div className="mt-5 grid gap-3">
               <button onClick={onCopyAll} className="btn-secondary w-full justify-between px-4">
                 <span>复制全部结果</span>
                 <span className="text-xs uppercase tracking-[0.16em] text-slate-400">剪贴板</span>
-              </button>
-              <button onClick={onExportMarkdown} className="btn-secondary w-full justify-between px-4">
-                <span>导出 Markdown</span>
-                <span className="text-xs uppercase tracking-[0.16em] text-slate-400">.md</span>
-              </button>
-              <button onClick={onExportPdf} className="btn-secondary w-full justify-between px-4">
-                <span>导出 PDF</span>
-                <span className="text-xs uppercase tracking-[0.16em] text-slate-400">.pdf</span>
               </button>
             </div>
           </div>
@@ -110,7 +100,7 @@ export default function ResumeForm({
             <p className="section-kicker">工作流控制</p>
             <h3 className="mt-3 text-xl font-semibold tracking-tight text-slate-950">操作中心</h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              将导出、模式选择与运行控制放在一起，让常见桌面宽度下的工作区保持紧凑。
+              将模式选择与运行控制放在一起，让常见桌面宽度下的工作区保持紧凑。
             </p>
 
             <div className="mt-5 min-w-0">
