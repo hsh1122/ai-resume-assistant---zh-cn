@@ -5,7 +5,7 @@ It combines a React dashboard, a FastAPI backend, JWT authentication, SQLite per
 
 The current product focuses on one tight loop: log in, prepare source material, run an optimization, review the structured output, copy what you need, and reopen previous runs from your personal history archive.
 
-The UI is localized to Chinese. The screenshots below use English sample resume content for readability while reflecting the current interface.
+The UI is localized to Chinese. The screenshots below show a fresh walkthrough using the sample account `hhh666`, source resume text `清华大学 计算机科学与技术`, and target role summary `腾讯游戏开发`.
 
 ## Screenshots
 
@@ -13,19 +13,19 @@ The UI is localized to Chinese. The screenshots below use English sample resume 
 
 ![Dashboard overview](docs/images/dashboard-overview.png)
 
-Authenticated dashboard overview with the source workspace, quick actions, and history archive visible together.
+Authenticated dashboard overview after one completed optimization, with the source workspace, results review, and history archive visible together.
 
 ### Feature Gallery
 
 | Login / Register | Source Workspace |
 | --- | --- |
 | ![Login screen](docs/images/login-screen.png) | ![Source workspace](docs/images/source-workspace.png) |
-| Auth gate with login and registration modes backed by JWT auth routes. | Resume and JD inputs, quick copy actions, mode selection, and the optimization trigger. |
+| Registration-first auth gate with `hhh666` entered in the account form backed by JWT auth routes. | Source workspace populated with `清华大学 计算机科学与技术`, `腾讯游戏开发`, quick copy actions, mode selection, and the optimization trigger. |
 
 | Results Review | History Archive |
 | --- | --- |
 | ![Results panel](docs/images/results-panel.png) | ![History archive](docs/images/history-archive.png) |
-| Structured output with optimized resume text, match analysis, suggestions, and section-level copy actions. | Per-user saved runs with search, style filter, pagination, restore, and delete actions. |
+| Structured output with the optimized resume text, match analysis, suggestions, and section-level copy actions for the sample Tencent game development flow. | Per-user saved runs showing the newly created `hhh666` optimization record alongside search, style filter, pagination, restore, and delete actions. |
 
 ## What The App Does
 
