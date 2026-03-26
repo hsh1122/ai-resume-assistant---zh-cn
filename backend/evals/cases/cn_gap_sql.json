@@ -1,0 +1,12 @@
+{
+  "id": "cn_gap_sql",
+  "style": "Professional",
+  "resume_text": "清华大学，计算机相关专业。\n负责 Python 数据看板开发，与产品和运营协作，优化周报流程，提升汇报效率。\n参与后端接口开发和内部工具维护。",
+  "jd_text": "岗位要求：\n1. 熟悉 Python 和 SQL\n2. 有数据看板负责人经验\n3. 具备跨团队沟通能力\n4. 有可量化业务成果\n5. 有较强的业务影响力表达",
+  "checks": {
+    "language": "Chinese",
+    "must_keep": ["清华大学", "Python 数据看板开发", "后端", "内部工具"],
+    "must_not_claim": ["SQL", "负责人经验"],
+    "should_flag_as_gap": ["SQL", "量化成果"]
+  }
+}

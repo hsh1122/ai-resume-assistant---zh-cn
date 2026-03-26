@@ -1,64 +1,105 @@
-# AI Resume Assistant
+# AI Resume Assistant 中文版
 
-AI Resume Assistant is a small full-stack workspace for tailoring a resume to a target job description.
-It combines a React dashboard, a FastAPI backend, JWT authentication, SQLite persistence, and an OpenAI-compatible AI layer with a deterministic mock fallback.
+AI Resume Assistant 是一个面向求职场景的小型全栈项目，用来把当前简历草稿针对目标岗位描述做定向优化。项目包含 React 18 + Vite 前端、FastAPI + SQLite 后端、JWT 登录鉴权，以及一个支持 OpenAI 兼容接口的 AI 优化层。
 
-The current product focuses on one tight loop: log in, prepare source material, run an optimization, review the structured output, copy what you need, and reopen previous runs from your personal history archive.
+这版仓库已经不只是“调用一次模型然后返回结果”，而是围绕简历优化做了更完整的一套闭环：
 
-The UI is localized to Chinese. The screenshots below show a fresh walkthrough using the sample account `hhh666`, source resume text `清华大学 计算机科学与技术`, and target role summary `腾讯游戏开发`.
+- 中文工作台：登录后可直接编辑原始简历、岗位描述和优化模式
+- 两阶段 AI 优化：先抽取事实，再基于事实做 grounded rewrite，尽量减少幻觉
+- 结构化输出：返回优化后简历、匹配分析、修改建议
+- 个人历史归档：每位用户都能查看、搜索、恢复和删除自己的优化记录
+- 固定样例评测：提供 3 组固定 case 和脚本，用来比较 Prompt 或流程迭代前后的真实输出质量
 
-## Screenshots
+当前界面文案为中文，下面的截图使用了一个演示账号和中文测试内容重新走完整流程。截图中的示例账号为 `readme_demo_0326`，密码为 `abc123456`。
 
-### Dashboard Overview
+## 页面截图
 
-![Dashboard overview](docs/images/dashboard-overview.png)
+### 总览
 
-Authenticated dashboard overview after one completed optimization, with the source workspace, results review, and history archive visible together.
+![仪表盘总览](docs/images/dashboard-overview.png)
 
-### Feature Gallery
+登录后的完整工作台总览。左侧是原始材料输入和结果区块，右侧是按用户隔离的历史归档。
 
-| Login / Register | Source Workspace |
+### 细节视图
+
+| 登录 / 注册 | 原始内容工作区 |
 | --- | --- |
-| ![Login screen](docs/images/login-screen.png) | ![Source workspace](docs/images/source-workspace.png) |
-| Registration-first auth gate with `hhh666` entered in the account form backed by JWT auth routes. | Source workspace populated with `清华大学 计算机科学与技术`, `腾讯游戏开发`, quick copy actions, mode selection, and the optimization trigger. |
+| ![登录页](docs/images/login-screen.png) | ![原始内容工作区](docs/images/source-workspace.png) |
+| 中文登录注册面板，演示账号使用 `readme_demo_0326 / abc123456`。 | 使用中文测试简历和中文岗位描述，模式切换与触发按钮均使用当前版本界面。 |
 
-| Results Review | History Archive |
+| 结果区块 | 历史归档 |
 | --- | --- |
-| ![Results panel](docs/images/results-panel.png) | ![History archive](docs/images/history-archive.png) |
-| Structured output with the optimized resume text, match analysis, suggestions, and section-level copy actions for the sample Tencent game development flow. | Per-user saved runs showing the newly created `hhh666` optimization record alongside search, style filter, pagination, restore, and delete actions. |
+| ![结果区块](docs/images/results-panel.png) | ![历史归档](docs/images/history-archive.png) |
+| 展示优化后简历、匹配分析、建议三个结果区块，并支持逐块复制。 | 展示当前用户的历史记录、筛选控件、分页、恢复和删除操作。 |
 
-## What The App Does
+## 当前版本能做什么
 
-- Registers users and authenticates them with JWT-based login.
-- Lets authenticated users submit `resume_text`, `jd_text`, and a selected optimization style.
-- Supports three rewrite modes: Professional, Concise, and Achievement-Oriented.
-- Returns three structured result blocks: optimized resume, match analysis, and suggestions.
-- Lets users copy the full result package from the source workspace.
-- Lets users copy individual result sections from the review area.
-- Stores optimization history per user in SQLite.
-- Lets users search history, filter by style, reopen a saved run, and delete records.
-- Exposes FastAPI docs at `http://127.0.0.1:8000/docs`.
+- 注册、登录和退出登录
+- 录入 `resume_text`、`jd_text` 和优化模式
+- 支持 3 种模式：`Professional`、`Concise`、`Achievement-Oriented`
+- 返回 3 个结构化结果字段：
+  - `optimized_resume`
+  - `match_analysis`
+  - `suggestions`
+- 支持复制整组结果，也支持分别复制优化后简历、匹配分析和建议
+- 使用 SQLite 持久化历史记录，并按用户隔离
+- 支持历史记录搜索、样式过滤、分页、恢复和删除
+- 支持 OpenAI 兼容接口；未配置 API Key 时自动走本地 mock
+- 支持固定样例评测脚本，用于做 Prompt/流程回归比较
 
-## Tech Stack
+## 项目亮点
 
-- Frontend: React 18, Vite 5, Tailwind CSS
-- Backend: FastAPI, SQLAlchemy 2, SQLite, Pydantic Settings
-- Auth: JWT via `python-jose` and password hashing via `passlib`
-- AI: OpenAI Python SDK against an OpenAI-compatible base URL
-- Frontend testing: Vitest + Testing Library
-- Backend testing: `unittest`
+### 1. 两阶段 AI 优化流程
 
-## Product Flow
+后端不再只靠单轮 Prompt 直接生成结果，而是分成两步：
 
-1. Register or log in.
-2. Paste the current resume draft and target job description.
-3. Choose an optimization mode.
-4. Run the optimization request.
-5. Review the generated resume package.
-6. Copy the combined result when needed.
-7. Reopen or delete previous runs from the history archive.
+1. 从原始简历中抽取 grounded facts
+2. 只基于这些事实和 JD 差距，生成优化后简历、匹配分析和建议
 
-## Repository Structure
+这样做的目标是：
+
+- 减少“为了贴 JD 而编造不存在的技能或经历”
+- 尽量保留学校、项目、技术栈、量化结果等关键事实
+- 让 `match_analysis` 更像“证据 + 缺口”分析，而不是模板化夸赞
+
+### 2. 固定样例评测
+
+除了常规单元测试，仓库里还补了一套固定样例评测：
+
+- `cn_gap_sql`
+- `cn_quantified_dashboard`
+- `en_backend_general`
+
+它们会从 5 个维度给输出打分：
+
+- `language_ok`
+- `must_keep_ok`
+- `must_not_claim_ok`
+- `gap_flagged_ok`
+- `actionable_suggestions_ok`
+
+这套脚本的价值是：每次改 Prompt 或两阶段流程之后，都可以用同一批样例反复跑，判断输出是整体变稳了，还是只是在某一个例子上偶然变好。
+
+## 技术栈
+
+- 前端：React 18、Vite 5、Tailwind CSS
+- 后端：FastAPI、SQLAlchemy 2、SQLite、Pydantic Settings
+- 鉴权：JWT（`python-jose`）+ `passlib`
+- AI：OpenAI Python SDK（兼容 OpenAI 风格 API）
+- 前端测试：Vitest + Testing Library
+- 后端测试：`unittest`
+
+## 产品流程
+
+1. 注册或登录
+2. 输入当前简历草稿
+3. 输入目标岗位描述
+4. 选择优化模式
+5. 发起 AI 优化请求
+6. 查看优化后简历、匹配分析和建议
+7. 复制结果或从历史归档中恢复之前的版本
+
+## 目录结构
 
 ```text
 .
@@ -75,36 +116,44 @@ Authenticated dashboard overview after one completed optimization, with the sour
 |   +-- app/
 |   |   +-- api/
 |   |   +-- services/
+|   |   |   +-- ai_service.py
+|   |   |   \-- eval_service.py
 |   |   +-- config.py
 |   |   +-- crud.py
 |   |   +-- main.py
 |   |   +-- models.py
 |   |   \-- schemas.py
+|   +-- evals/
+|   |   +-- cases/
+|   |   \-- results/
+|   +-- scripts/
+|   |   \-- run_eval_samples.py
 |   +-- tests/
 |   \-- requirements.txt
 \-- docs/
-    +-- PROJECT_NOTES.md
+    +-- PAIRING_NOTES.md
     \-- images/
 ```
 
-### Key Files
+## 关键文件
 
-- `frontend/src/App.jsx`: top-level app shell, auth gate, source workspace, results, and history layout
-- `frontend/src/api.js`: browser-side API wrappers
-- `frontend/src/components/ResumeForm.jsx`: source inputs, quick copy card, mode controls, and optimization trigger
-- `frontend/src/components/OptimizationResult.jsx`: structured results review with per-section copy
-- `frontend/src/components/HistoryList.jsx`: history archive shell, saved record cards, and pagination controls
-- `backend/app/main.py`: FastAPI app creation, CORS, router wiring, DB init
-- `backend/app/api/auth_routes.py`: register, login, and current-user endpoints
-- `backend/app/api/routes.py`: optimize, list records, get record, delete record
-- `backend/app/services/ai_service.py`: OpenAI-compatible request flow plus deterministic mock/fallback behavior
-- `backend/app/crud.py`: database helpers and history queries
+- `frontend/src/App.jsx`：顶层工作台、登录态切换、结果区和历史区布局
+- `frontend/src/components/ResumeForm.jsx`：原始简历、岗位描述、模式选择和触发按钮
+- `frontend/src/components/OptimizationResult.jsx`：优化后简历、匹配分析、建议三块结果面板
+- `frontend/src/components/HistoryList.jsx`：历史记录展示、打开、删除、分页
+- `frontend/src/api.js`：前端 API 请求封装
+- `backend/app/api/auth_routes.py`：注册、登录、当前用户接口
+- `backend/app/api/routes.py`：优化、列表、详情、删除接口
+- `backend/app/services/ai_service.py`：两阶段 AI 流程、AI 请求、mock/fallback 逻辑
+- `backend/app/services/eval_service.py`：固定样例评测打分逻辑
+- `backend/scripts/run_eval_samples.py`：批量运行评测 case 并输出 JSON 报告
+- `backend/tests/test_history_api.py`：当前后端主要测试模块
 
-## Local Development
+## 本地运行
 
-### Backend
+### 1. 启动后端
 
-From `backend/`:
+在 `backend/` 目录下：
 
 ```powershell
 python -m venv .venv
@@ -113,77 +162,75 @@ pip install -r requirements.txt
 copy .env.example .env
 ```
 
-Edit `backend/.env` and set at least:
+至少要给 `backend/.env` 配置一个 JWT 密钥：
 
 ```env
 JWT_SECRET_KEY=change_me_to_a_real_local_secret
 ```
 
-Then start the API:
+然后启动后端：
 
 ```powershell
 uvicorn app.main:app --reload
 ```
 
-### Frontend
+### 2. 启动前端
 
-From `frontend/`:
+在 `frontend/` 目录下：
 
 ```powershell
 npm install
 copy .env.example .env.local
 ```
 
-Set the frontend API base URL if needed:
+如果需要，设置 API 地址：
 
 ```env
 VITE_API_BASE_URL=http://127.0.0.1:8000
 ```
 
-Then start the Vite dev server:
+然后启动前端：
 
 ```powershell
 npm run dev
 ```
 
-### App URLs
+### 3. 默认地址
 
-- Frontend: `http://127.0.0.1:5173`
-- Backend: `http://127.0.0.1:8000`
-- FastAPI docs: `http://127.0.0.1:8000/docs`
+- 前端：`http://127.0.0.1:5173`
+- 后端：`http://127.0.0.1:8000`
+- FastAPI 文档：`http://127.0.0.1:8000/docs`
 
-## Environment Variables
+## 环境变量
 
-### Backend (`backend/.env`)
+### 后端（`backend/.env`）
 
-| Variable | Required | Notes |
+| 变量名 | 是否必填 | 说明 |
 | --- | --- | --- |
-| `OPENAI_API_KEY` | No | Leave empty to use local mock output |
-| `OPENAI_BASE_URL` | No | OpenAI-compatible provider base URL |
-| `OPENAI_MODEL` | No | Model name used by the backend AI client |
-| `DATABASE_URL` | No | Defaults to SQLite in `backend/` |
-| `JWT_SECRET_KEY` | Yes | Backend startup fails if this is empty |
-| `JWT_ALGORITHM` | No | Defaults to `HS256` |
-| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | No | Token lifetime in minutes |
-| `CORS_ALLOWED_ORIGINS` | No | Comma-separated frontend origins |
+| `OPENAI_API_KEY` | 否 | 留空时走本地 mock 输出 |
+| `OPENAI_BASE_URL` | 否 | OpenAI 兼容接口地址 |
+| `OPENAI_MODEL` | 否 | 调用的模型名 |
+| `DATABASE_URL` | 否 | 默认使用 SQLite |
+| `JWT_SECRET_KEY` | 是 | 为空时后端无法正常启动 |
+| `JWT_ALGORITHM` | 否 | 默认 `HS256` |
+| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | 否 | Token 有效期 |
+| `CORS_ALLOWED_ORIGINS` | 否 | 前端允许来源，逗号分隔 |
 
-### Frontend (`frontend/.env.local`, `.env.development`, or `.env.production`)
+### 前端（`frontend/.env.local` 等）
 
-| Variable | Required | Notes |
+| 变量名 | 是否必填 | 说明 |
 | --- | --- | --- |
-| `VITE_API_BASE_URL` | Yes | Base URL for the FastAPI backend |
+| `VITE_API_BASE_URL` | 是 | 后端 FastAPI 基础地址 |
 
-## AI Behavior
+## AI 返回来源说明
 
-The backend uses an OpenAI-compatible client and is configured for DeepSeek-style endpoints in the example env files.
+调用 `/api/optimize` 后，响应里可能出现：
 
-When `/api/optimize` runs, the response may include:
+- `result_source=ai`：成功使用了真实模型返回
+- `result_source=mock`：未配置 API Key，直接使用本地 mock 输出
+- `result_source=fallback`：尝试调用真实模型失败后，退回到本地兜底输出
 
-- `result_source=ai`: a live model response was returned
-- `result_source=mock`: no API key was configured, so deterministic local output was used
-- `result_source=fallback`: a live request was attempted but the backend fell back to local output
-
-The backend may also include `fallback_reason` values such as:
+同时还可能附带 `fallback_reason`，例如：
 
 - `missing_api_key`
 - `request_exception`
@@ -191,61 +238,79 @@ The backend may also include `fallback_reason` values such as:
 - `empty_ai_response`
 - `incomplete_ai_payload`
 
-If provider credentials are invalid, the API returns an explicit authentication/configuration error instead of silently returning mock output.
+如果提供商认证信息错误，后端会返回明确的认证/配置错误，而不是静默退回 mock。
 
-## API Overview
+## 接口概览
 
-### Auth
+### 鉴权
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
 
-### Resume Optimization And History
+### 简历优化与历史记录
 
 - `POST /api/optimize`
 - `GET /api/records?page=1&page_size=5&keyword=&style=`
 - `GET /api/records/{id}`
 - `DELETE /api/records/{id}`
 
-## Testing And Verification
+## 测试与验证
 
-### Frontend
+### 前端
 
-Run all frontend tests:
+运行全部前端测试：
 
 ```powershell
 cd frontend
 npm run test
 ```
 
-Run one frontend test file:
+运行单个前端测试文件：
 
 ```powershell
 cd frontend
 npm run test:one -- src/components/ResumeForm.test.jsx
 ```
 
-Build the frontend:
+构建前端：
 
 ```powershell
 cd frontend
 npm run build
 ```
 
-### Backend
+### 后端
 
-Run the current backend test module:
+运行当前后端测试模块：
 
 ```powershell
 cd backend
 .venv\Scripts\python.exe -m unittest tests.test_history_api
 ```
 
-## Notes
+### 固定样例评测
 
-- This repo currently uses plain JavaScript on the frontend, not TypeScript.
-- The app is a single-page dashboard with an auth gate rather than a multi-route frontend.
-- SQLite is the tracked local database default.
-- Export actions were intentionally removed; the current outbound path is copy-to-clipboard plus history reuse.
-- `docs/PROJECT_NOTES.md` stores lightweight handoff notes for future sessions.
+运行全部固定样例：
+
+```powershell
+cd backend
+.venv\Scripts\python.exe scripts\run_eval_samples.py
+```
+
+只运行一组样例：
+
+```powershell
+cd backend
+.venv\Scripts\python.exe scripts\run_eval_samples.py --case cn_gap_sql
+```
+
+评测脚本会读取 `backend/evals/cases/` 中的 JSON case，并把报告写到 `backend/evals/results/`。
+
+## 说明
+
+- 前端目前使用的是 JavaScript，不是 TypeScript
+- 这是一个单页工作台应用，不是多路由网站
+- 默认数据库是仓库内的 SQLite
+- 当前输出路径以复制到剪贴板和历史记录复用为主，没有导出文件功能
+- `docs/PAIRING_NOTES.md` 里保存了这轮开发和学习过程中的关键结论与复盘记录

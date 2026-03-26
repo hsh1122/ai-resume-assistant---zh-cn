@@ -1,0 +1,12 @@
+{
+  "id": "en_backend_general",
+  "style": "Professional",
+  "resume_text": "Backend engineer with experience building internal APIs and automation tools. Improved incident triage workflow and partnered with product managers to streamline support operations.",
+  "jd_text": "Requirements:\n1. Strong backend API development skills\n2. Experience with stakeholder communication\n3. Ability to quantify operational impact\n4. Familiarity with SQL and production debugging",
+  "checks": {
+    "language": "English",
+    "must_keep": ["internal API", "automation"],
+    "must_not_claim": ["SQL", "production debugging"],
+    "should_flag_as_gap": ["SQL", "production debugging"]
+  }
+}
